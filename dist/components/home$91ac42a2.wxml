@@ -1,0 +1,16 @@
+<template name="home$91ac42a2">
+  <view class="_div data-v-2534b16c homePage">
+    <image class="_img data-v-2534b16c bg" src="/copy-asset/static/img/bg.png"></image>
+    <view class="_div data-v-2534b16c wraps">
+      <view bindtap="handleProxy" class="_a data-v-2534b16c enter_btn" data-eventid="{{'0'}}" data-comkey="{{$k}}">
+        <image mode="widthFix" src="/copy-asset/static/img/enter_4.png" class="_img data-v-2534b16c"></image>
+      </view>
+      <view bindtap="handleProxy" class="_a data-v-2534b16c enter_btn" data-eventid="{{'1'}}" data-comkey="{{$k}}">
+        <image mode="widthFix" src="/copy-asset/static/img/enter_6.png" class="_img data-v-2534b16c"></image>
+      </view>
+      <view bindtap="handleProxy" class="_a data-v-2534b16c enter_btn" data-eventid="{{'2'}}" data-comkey="{{$k}}">
+        <image mode="widthFix" src="/copy-asset/static/img/enter_9.png" class="_img data-v-2534b16c"></image>
+      </view>
+    </view>
+  </view>
+</template>
