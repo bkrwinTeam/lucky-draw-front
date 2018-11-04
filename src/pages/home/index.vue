@@ -9,7 +9,6 @@
             <div><button class="phone-submit" @click="submit()">提  交</button></div>
         </div>
         <van-popup v-model="showFailModal">对不起，您没有资格抽奖</van-popup>
-
     </div>
 </template>
 
@@ -30,7 +29,7 @@
 
         },
         methods: { // 事件处理方法
-            gotoLuckyDraw() {
+            goToLuckyDraw() {
                 this.navigatePageTo(this.router + 'luckyDraw')
             },
             submit() {
@@ -55,10 +54,8 @@
                 this.phone = '';
             },
             onSave() {
-                Toast('save');
             },
             onDelete() {
-                Toast('delete');
             },
             onChangeDetail(val) {
                 if (val) {
@@ -69,17 +66,52 @@
                 } else {
                     this.searchResult = [];
                 }
+            },
+            getQueryString(name){
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]); return null;
+            },
+            registPhone(){
+                this.httpSer.post('Draw/DrawRegister',{phone: '18888888888'},(data)=>{
+                    if(data.Code !== 0){
+                        Toast.fail(data.Message);
+                        return;
+                    }
+                    this.goToLuckyDraw();
+                });
             }
         },
         created() { // 生命周期函数
 
+
         },
         mounted() {
-            this.clientHeight = document.documentElement.clientHeight;
-            var self = this;
-            this.timeoutShowLight = setInterval(function() {
-              self.showLight = !self.showLight;
-            }, 200)
+          this.clientHeight = document.documentElement.clientHeight;
+          var self = this;
+          this.timeoutShowLight = setInterval(function() {
+            self.showLight = !self.showLight;
+          }, 200)
+            let client = navigator.userAgent.toLowerCase();
+            if (client.indexOf('micromessenger') === -1) {
+                return;
+            }
+            let code = this.getQueryString('code');
+            let href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx87fa2969561cf076&redirect_uri=" +
+                encodeURIComponent(window.location.href) + "&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
+            if(code){
+                this.httpSer.post('Draw/DrawLogin',{code: code,orgId: 100000015},(data)=>{
+                    if(!data.Value){
+                        return;
+                    }
+                    if(data.Value.DrawActivityType === 2){
+                        return;
+                    }
+                    this.reLaunchPageTo(this.router + 'luckyDraw');
+                });
+                return;
+            }
+            window.location.replace(href);
             
         },
         destroyed() {

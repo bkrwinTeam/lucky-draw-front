@@ -25,71 +25,69 @@
             <img src="/static/image/fail-expression.png" alt="">
         </div>
     </transition>
-
-
   </div>
 </template>
 
 <script>
 export default {
-  data () { // 选项 数据
+  data() { // 选项 数据
     return {
-        clientHeight: '',
-        showBeginToDraw: true,
-        showLuckyRes: false,
-        showFailRes: false,
-        showDrawBox: false,
-        timeoutShowDrawBox: null
+      clientHeight: '',
+      showBeginToDraw: true,
+      showLuckyRes: false,
+      showFailRes: false,
+      showDrawBox: false,
+      timeoutShowDrawBox: null
     }
   },
   components: { // 定义组件
 
   },
   methods: { // 事件处理方法
-      gotoHome (path) {
-         this.reLaunchPageTo(this.router + path)
-      },
-      beginDraw() {
-        if (this.showBeginToDraw) {
-            this.showLuckyRes = true;
-            this.showBeginToDraw = !this.showBeginToDraw;
-            clearInterval(this.timeoutShowDrawBox);
-            this.timeoutShowDrawBox = null;
-            this.showDrawBox = null;
-            return;
-        }
-      },
-      completeAddress() {
-        console.log('填写地址');
-        this.navigatePageTo(this.router + 'luckyDrawAddress');
-      },
-      showLuckyInfo() {
-        console.log('查看中奖信息');
-        this.navigatePageTo(this.router + 'luckyDrawResult');
-      },
-      showDrawBoxInterval() {
-        var self = this;
-        this.timeoutShowDrawBox = setInterval(function() {
-          self.showDrawBox = !self.showDrawBox
-        }, 800);
+    gotoHome(path) {
+      this.reLaunchPageTo(this.router + path)
+    },
+    beginDraw() {
+      if (this.showBeginToDraw) {
+        this.showLuckyRes = true;
+        this.showBeginToDraw = !this.showBeginToDraw;
+        clearInterval(this.timeoutShowDrawBox);
+        this.timeoutShowDrawBox = null;
+        this.showDrawBox = null;
+        return;
       }
+    },
+    completeAddress() {
+      console.log('填写地址');
+      this.navigatePageTo(this.router + 'luckyDrawAddress');
+    },
+    showLuckyInfo() {
+      console.log('查看中奖信息');
+      this.navigatePageTo(this.router + 'luckyDrawResult');
+    },
+    showDrawBoxInterval() {
+      var self = this;
+      this.timeoutShowDrawBox = setInterval(function() {
+        self.showDrawBox = !self.showDrawBox
+      }, 800);
+    }
   },
-  created () { // 生命周期函数
-      // console.log('homeroot', this.$root, this.$root.$mp)
+  created() { // 生命周期函数
+    // console.log('homeroot', this.$root, this.$root.$mp)
   },
   destroyed() {
     clearInterval(this.timeoutShowDrawBox);
     this.timeoutShowDrawBox = null;
   },
-  mounted () {
-      this.clientHeight = document.documentElement.clientHeight;
-      this.showDrawBoxInterval();
+  mounted() {
+    this.clientHeight = document.documentElement.clientHeight;
+    this.showDrawBoxInterval();
   },
   watch: {
     clientHeight: function() {
-        this.$refs.luckDraw.style.height = this.clientHeight+'px';
+      this.$refs.luckDraw.style.height = this.clientHeight + 'px';
     }
-}
+  }
 }
 </script>
 
