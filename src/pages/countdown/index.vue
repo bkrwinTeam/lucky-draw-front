@@ -21,7 +21,8 @@
                 clientHeight: '',
                 startTime: '2018.11.11 - 9:00',
                 endTime: '2018.11.12 - 9:00',
-                countDownTime: '10天'
+                countDownTime: '',
+                timer: null
             }
         },
         components: { // 定义组件
@@ -30,7 +31,36 @@
         methods: { 
             getCountDownInfo() {
 
+            },
+          getCountDownTime() {
+            var times = (new Date(2018, 10, 11).getTime() - new Date().getTime())/1000;
+            console.log('哈哈', times);
+            var self = this;
+            this.timer=setInterval(function(){
+              var day=0,
+                hour=0,
+                minute=0,
+                second=0;//时间默认值
+              if(times > 0){
+                day = Math.floor(times / (60 * 60 * 24));
+                hour = Math.floor(times / (60 * 60)) - (day * 24);
+                minute = Math.floor(times / 60) - (day * 24 * 60) - (hour * 60);
+                second = Math.floor(times) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+              }
+              if (day <= 9) day = '0' + day;
+              if (hour <= 9) hour = '0' + hour;
+              if (minute <= 9) minute = '0' + minute;
+              if (second <= 9) second = '0' + second;
+              //
+              console.log(day+"天:"+hour+"小时："+minute+"分钟："+second+"秒");
+              self.countDownTime = day+"天"+hour+"小时"+minute+"分钟"+second+"秒";
+              times--;
+            },1000);
+            if(times<=0){
+              clearInterval(this.timer);
             }
+
+          }
 
         },
         created() { // 生命周期函数
@@ -39,6 +69,11 @@
         mounted() {
             this.clientHeight = document.documentElement.clientHeight;
             console.log('哈哈', this.clientHeight);
+            this.getCountDownTime();
+        },
+        destroyed() {
+          clearInterval(this.timer);
+          this.timer = null;
         },
         watch: {
             clientHeight: function() {

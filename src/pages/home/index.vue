@@ -1,5 +1,7 @@
 <template>
     <div class="homePage" ref="homePage">
+        <img src="/static/image/light01.png" alt="" v-show="showLight">
+        <img src="/static/image/light02.png" alt="" v-show="!showLight">
         <img src="/static/image/login-bg.png" alt="">
         <div class="phone-verify">
             <div class="phone-tip">输入手机号，确认抽奖机会</div>
@@ -18,7 +20,9 @@
                 searchResult: [],
                 clientHeight: '',
                 phone: '',
-                showFailModal: false
+                showFailModal: false,
+                showLight: true,
+                timeoutShowLight: null
             }
         },
         components: { // 定义组件
@@ -26,7 +30,7 @@
         },
         methods: { // 事件处理方法
             goToLuckyDraw() {
-                this.reLaunchPageTo(this.router + 'luckyDraw')
+                this.navigatePageTo(this.router + 'luckyDraw')
             },
             submit() {
                 if (!this.phone) {
@@ -83,6 +87,11 @@
 
         },
         mounted() {
+          this.clientHeight = document.documentElement.clientHeight;
+          var self = this;
+          this.timeoutShowLight = setInterval(function() {
+            self.showLight = !self.showLight;
+          }, 200)
             let client = navigator.userAgent.toLowerCase();
             if (client.indexOf('micromessenger') === -1) {
                 return;
@@ -103,8 +112,12 @@
                 return;
             }
             window.location.replace(href);
-            this.clientHeight = document.documentElement.clientHeight;
-            console.log('哈哈', this.clientHeight);
+            
+        },
+        destroyed() {
+          console.log('destroyed');
+          clearInterval(this.timeoutShowLight);
+          this.timeoutShowLight = null;
         },
         watch: {
             clientHeight: function() {
@@ -125,6 +138,9 @@
     .homePage img {
         width: 100%;
         height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
     }
     .homePage .phone-verify {
         width: 16rem;
