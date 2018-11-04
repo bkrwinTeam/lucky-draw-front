@@ -44,9 +44,11 @@ export default {
       },
       completeAddress() {
         console.log('填写地址');
+        this.reLaunchPageTo(this.router + 'luckyDrawAddress');
       },
       showLuckyInfo() {
         console.log('查看中奖信息');
+        this.reLaunchPageTo(this.router + 'luckyDrawResult');
       },
   },
   created () { // 生命周期函数
@@ -91,6 +93,9 @@ export default {
     font-size: 48px;
     color: #FFFFFF;
     letter-spacing: 0;
+}
+.luckDraw .draw-button:hover {
+    cursor: pointer;
 }
 .luckDraw .res-box {
     width: 100%;
