@@ -1,11 +1,15 @@
 <template>
-    <div class="homePage">
-        登陆页
-        <button v-on:click="gotoLuckyDraw()">
-            跳转
-        </button>
+    <div class="homePage" ref="homePage">
+        <img src="/static/image/login-bg.png" alt="">
+        <div class="phone-verify">
+            <div class="phone-tip">输入手机号，确认抽奖机会</div>
+            <div><input type="number" v-model="phone" class="phone-input" placeholder="请输入手机号码"></div>
+            <div><button class="phone-submit" @click="submit()">提  交</button></div>
+        </div>
+        <van-popup v-model="showFailModal">对不起，您没有资格抽奖</van-popup>
 
-        <van-address-edit
+
+         <!--<van-address-edit
                 :area-list="areaList"
                 show-postal
                 show-delete
@@ -15,7 +19,7 @@
                 @save="onSave"
                 @delete="onDelete"
                 @change-detail="onChangeDetail"
-        />
+        /> -->
     </div>
 </template>
 
@@ -23,8 +27,11 @@
     export default {
         data() { // 选项 数据
             return {
-                areaList,
-                searchResult: []
+                areaList:{},
+                searchResult: [],
+                clientHeight: '',
+                phone: '',
+                showFailModal: false
             }
         },
         components: { // 定义组件
@@ -33,6 +40,22 @@
         methods: { // 事件处理方法
             gotoLuckyDraw() {
                 this.reLaunchPageTo(this.router + 'luckyDraw')
+            },
+            submit() {
+                if (!this.phone) {
+                    console.log('phone none');
+                    return;
+                }
+                console.log('phone', this.phone);
+                if (this.phone === '123') {
+                    this.showFailModal = true;
+                    return;
+                }
+                this.gotoLuckyDraw();
+            },
+            submitAgain() {
+                this.showFailModal = false;
+                this.phone = '';
             },
             onSave() {
                 Toast('save');
@@ -55,7 +78,13 @@
 
         },
         mounted() {
-
+            this.clientHeight = document.documentElement.clientHeight;
+            console.log('哈哈', this.clientHeight);
+        },
+        watch: {
+            clientHeight: function() {
+                this.$refs.homePage.style.height = this.clientHeight+'px';
+            }
         }
     }
 </script>
@@ -63,6 +92,66 @@
 <style scoped>
     .homePage {
         width: 100%;
+        box-sizing: border-box;
+        background-image: url('/static/image/background.jpg');
+        background-size: cover;
+        
+    }
+    .homePage img {
+        width: 100%;
         height: 100%;
+    }
+    .homePage .phone-verify {
+        width: 16rem;
+        position: absolute;
+        bottom: 175px;
+        left: 50%;
+        margin-left:-8rem;
+
+    }
+    .homePage .phone-tip {
+        font-family: STLibian-SC-Regular;
+        font-size: 1.25rem;
+        color: #FDF4AC;
+        letter-spacing: 0;
+    }
+    .homePage .phone-input {
+        width: 100%;
+        height: 40px;
+        margin: 0.8rem 0;
+        background: #FFFFFF;
+        box-shadow: inset 0 1px 2px 0 rgba(0,0,0,0.50);
+        border-radius: 0.6rem;
+        border: none;
+        font-family: PingFangSC-Regular;
+        font-size: 0.8rem;
+        color: #999999;
+        letter-spacing: 0;
+    }
+    .homePage .phone-submit {
+        width:100%;
+        height: 40px;
+        background: #FE9101;
+        border: none;
+        border-radius: 6px;
+        font-family: PingFangSC-Regular;
+        font-size: 20px;
+        color: #FFFFFF;
+    }
+    .homePage .modal {
+        width: 100%; 
+        height: 100%;
+        position: absolute;
+        top: 0;
+        background: rgba(244,244,244, 0.5);
+    }
+    .homePage .modal .modal-content {
+        width: 100%; 
+        height: 3rem;
+        position: relative;
+        background: #fff;
+        top: 50%;
+        margin-top: -1.5rem;
+        
     }
 </style>
