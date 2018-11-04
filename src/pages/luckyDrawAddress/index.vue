@@ -9,6 +9,7 @@
                 @save="onSave"
                 @change-detail="onChangeDetail"
         />
+        <div class="btn-box"><button @click="backToLastPage" class="back-btn">返回</button></div>
     </div>
 </template>
 
@@ -33,6 +34,9 @@
             },
             onChangeDetail() {
 
+            },
+            backToLastPage() {
+              this.$router.back();
             }
 
         },
@@ -56,5 +60,17 @@
         box-sizing: border-box;
         border: 1px solid white;
         margin-top: 40px;
+    }
+    .luckyDrawAddress .btn-box {
+        padding: 0 15px;
+        margin-top: -25px;
+    }
+    .luckyDrawAddress .back-btn {
+        width: 100%;
+        height: 40px;
+        font-size: 14px;
+        color: #333;
+        background-color: #fff;
+        border: 1px solid #eee;
     }
 </style>

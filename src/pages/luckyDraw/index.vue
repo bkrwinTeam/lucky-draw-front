@@ -1,20 +1,32 @@
 <template>
   <div class="luckDraw" ref="luckDraw">
+      <transition name="fade">
+        <img src="/static/image/draw-box-small.png" alt="" v-show="showDrawBox">
+      </transition>
+      <transition name="fade">
+        <img src="/static/image/draw-box-big.png" alt="" v-show="!showDrawBox">
+      </transition>
     <div class="button-box" v-if="showBeginToDraw">
         <button class="draw-button" @click="beginDraw()">抽 奖</button>
     </div>
-    <div class="res-box" v-if="showLuckyRes">
-        <img src="/static/image/lucky-word.png" alt="">
-        <img src="/static/image/lucky-expression.png" alt="">
-        <div class="btn-box">
-            <button class="res-btn" @click="completeAddress()">填写奖品邮寄地址</button>
-            <button class="res-btn" @click="showLuckyInfo()">查看中奖信息</button>
+    <transition name="fade">
+      <div class="res-box" v-if="showLuckyRes">
+          <img src="/static/image/lucky-word.png" alt="">
+          <img src="/static/image/lucky-expression.png" alt="">
+          <div class="btn-box">
+              <button class="res-btn" @click="completeAddress()">填写奖品邮寄地址</button>
+              <button class="res-btn" @click="showLuckyInfo()">查看中奖信息</button>
+          </div>
+      </div>
+    </transition>
+    <transition name="fade">
+        <div class="res-box" v-if="showFailRes">
+            <img src="/static/image/fail-word.png" alt="">
+            <img src="/static/image/fail-expression.png" alt="">
         </div>
-    </div>
-    <div class="res-box" v-if="showFailRes">
-        <img src="/static/image/fail-word.png" alt="">
-        <img src="/static/image/fail-expression.png" alt="">
-    </div>
+    </transition>
+
+
   </div>
 </template>
 
@@ -25,7 +37,9 @@ export default {
         clientHeight: '',
         showBeginToDraw: true,
         showLuckyRes: false,
-        showFailRes: false
+        showFailRes: false,
+        showDrawBox: false,
+        timeoutShowDrawBox: null
     }
   },
   components: { // 定义组件
@@ -39,23 +53,37 @@ export default {
         if (this.showBeginToDraw) {
             this.showLuckyRes = true;
             this.showBeginToDraw = !this.showBeginToDraw;
+            clearInterval(this.timeoutShowDrawBox);
+            this.timeoutShowDrawBox = null;
+            this.showDrawBox = null;
             return;
         }
       },
       completeAddress() {
         console.log('填写地址');
-        this.reLaunchPageTo(this.router + 'luckyDrawAddress');
+        this.navigatePageTo(this.router + 'luckyDrawAddress');
       },
       showLuckyInfo() {
         console.log('查看中奖信息');
-        this.reLaunchPageTo(this.router + 'luckyDrawResult');
+        this.navigatePageTo(this.router + 'luckyDrawResult');
       },
+      showDrawBoxInterval() {
+        var self = this;
+        this.timeoutShowDrawBox = setInterval(function() {
+          self.showDrawBox = !self.showDrawBox
+        }, 800);
+      }
   },
   created () { // 生命周期函数
       // console.log('homeroot', this.$root, this.$root.$mp)
   },
+  destroyed() {
+    clearInterval(this.timeoutShowDrawBox);
+    this.timeoutShowDrawBox = null;
+  },
   mounted () {
       this.clientHeight = document.documentElement.clientHeight;
+      this.showDrawBoxInterval();
   },
   watch: {
     clientHeight: function() {
@@ -75,6 +103,9 @@ export default {
 .luckDraw img {
     width: 100%;
     height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 .luckDraw .button-box {
     width: 100%;
@@ -130,5 +161,11 @@ export default {
     font-size: 14px;
     color: #FFFFFF;
     letter-spacing: 0;
+}
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to {
+    opacity: 0;
 }
 </style>
