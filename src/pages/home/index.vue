@@ -48,7 +48,12 @@
                 }
                 console.log('phone', this.phone);
                 if (this.phone === '123') {
-                    this.showFailModal = true;
+                  this.$dialog.alert({
+                      message: '对不起，您没有资格抽奖'
+                    }).then(() => {
+                      console.log('关闭弹窗');
+                      this.phone = '';
+                    });
                     return;
                 }
                 this.gotoLuckyDraw();
@@ -123,6 +128,7 @@
         box-shadow: inset 0 1px 2px 0 rgba(0,0,0,0.50);
         border-radius: 0.6rem;
         border: none;
+        padding: 0 0.2rem;
         font-family: PingFangSC-Regular;
         font-size: 0.8rem;
         color: #999999;
