@@ -47,11 +47,7 @@
                     });
                     return;
                 }
-                this.gotoLuckyDraw();
-            },
-            submitAgain() {
-                this.showFailModal = false;
-                this.phone = '';
+                this.goToLuckyDraw();
             },
             onSave() {
             },
@@ -93,14 +89,15 @@
             self.showLight = !self.showLight;
           }, 200)
             let client = navigator.userAgent.toLowerCase();
-            if (client.indexOf('micromessenger') === -1) {
-                return;
-            }
-            let code = this.getQueryString('code');
+            // if (client.indexOf('micromessenger') === -1) {
+            //     return;
+            // }
+          // let code = this.getQueryString('code');
+          let code = 'ozhsq0lre5D_n4k7tM9red9m2Cus';
             let href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx87fa2969561cf076&redirect_uri=" +
                 encodeURIComponent(window.location.href) + "&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
             if(code){
-                this.httpSer.post('Draw/DrawLogin',{code: code,orgId: 100000015},(data)=>{
+                this.httpSer.post('Draw/DrawLogin',{OpenId: code,orgId: 100000015},(data)=>{
                     if(!data.Value){
                         return;
                     }
