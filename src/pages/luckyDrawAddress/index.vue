@@ -2,10 +2,7 @@
     <div class="luckyDrawAddress" ref="luckyDrawAddress">
         <van-address-edit
                 :area-list="areaList"
-                show-postal
-                show-set-default
-                show-search-result
-                :search-result="searchResult"
+                :address-info="defaultData"
                 @save="onSave"
                 @change-detail="onChangeDetail"
         />
@@ -14,25 +11,47 @@
 </template>
 
 <script>
+    import AreaList from './area';
     export default {
         data() { // 选项 数据
             return {
                 clientHeight: '',
-                areaList: {},
-                searchResult: []
+                areaList: AreaList,
+                searchResult: [],
+                defaultData: {
+                    name: '',
+                    tel: '',
+                    areaCode: '',
+                    addressDetail: ''
+                }
             }
         },
         components: { // 定义组件
 
         },
         methods: { 
-            onSave() {
-
+            onSave(data) {
+                this.httpSer.post('Draw/UpdateDrawUserInfo',{
+                    Name: data.name,
+                    Address: data.province + data.city + data.county,
+                    DetailAddress: data.addressDetail,
+                    Phone: data.tel,
+                    AreaCode: data.areaCode
+                },(res)=>{
+                    if(!res.Value){
+                        return;
+                    }
+                    if(res.Code !== 0){
+                        Toast.fail(res.Message);
+                        return;
+                    }
+                    this.backToLastPage();
+                });
             },
             onDelete() {
 
             },
-            onChangeDetail() {
+            onChangeDetail(val) {
 
             },
             backToLastPage() {
